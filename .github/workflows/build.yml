@@ -3,8 +3,8 @@ name: "Analyze and build"
 on:
   push:
     branches: [ "main" ]
-    # paths:
-    #   - '**.tsx'
+    paths:
+      - '**.tsx' # trigger only when typescript is changed
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
@@ -14,7 +14,7 @@ defaults:
     working-directory: next-app
 
 jobs:
-  # step 1 : analyze
+  # job 1 : analyze
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
@@ -45,9 +45,10 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
 
-  # step 2: build
+  # job 2: build
   build:
     runs-on: ubuntu-latest
+    needs: analyze # sequential
 
     strategy:
       matrix:
